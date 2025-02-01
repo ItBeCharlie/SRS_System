@@ -7,6 +7,8 @@ class PMM:
 
     def goto(self, state, symbol):
         # Get the transition table for current state
+        if state >= len(self.states):
+            return "fail"
         current = self.states[state]
         # Get the 'index' of the next state to transition to
         if symbol in current:
@@ -36,3 +38,31 @@ class PMM:
                 matches.append((i, self.output[state]))
         print(f"\t{state}")
         return matches
+
+    def construct_goto(self, keywords):
+        newstate = 0
+        k = len(keywords)
+        for i in range(0, k):
+            newstate = self.enter(keywords[i], newstate)
+
+    def enter(self, keyword, newstate):
+        state = 0
+        j = 0
+        m = len(keyword)
+        while j < m and self.goto(state, keyword[j]) != "fail":
+            state = self.goto(state, keyword[j])
+            j += 1
+            while state >= len(self.states):
+                self.states.append({})
+        print(self.states)
+        for p in range(j, m):
+            newstate += 1
+            while state >= len(self.states):
+                self.states.append({})
+            self.states[state][keyword[p]] = newstate
+            state = newstate
+        if state not in self.output:
+            self.output[state] = []
+        self.output[state].append(keyword)
+        print(self.states)
+        return newstate
