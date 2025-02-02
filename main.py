@@ -28,8 +28,9 @@ def basic_pmm_test():
     # test_pmm.states = test_states
     print(test_states)
     keywords = ["he", "she", "his", "hers"]
-    test_pmm.construct_goto(keywords)
-    print(test_pmm.states)
+    alphabet = "usheri"
+    test_pmm.construct_goto(keywords, alphabet)
+    test_pmm.print_transition_table()
     test_pmm.failure_table = [0, 0, 0, 1, 2, 0, 3, 0, 3]
     test_output = {2: ["he"], 5: ["she", "he"], 7: ["his"], 9: ["hers"]}
     test_pmm.output = test_output
