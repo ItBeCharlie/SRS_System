@@ -12,7 +12,7 @@ def main():
 
 
 def basic_pmm_test():
-    test_pmm = PMM()
+    # test_pmm = PMM()
     test_states = [
         {"h": 1, "s": 3},
         {"e": 2, "i": 6},
@@ -29,11 +29,12 @@ def basic_pmm_test():
     print(test_states)
     keywords = ["he", "she", "his", "hers"]
     alphabet = "usheri"
-    test_pmm.construct_goto(keywords, alphabet)
+    test_pmm = PMM(keywords, alphabet)
+    # test_pmm.construct_goto(keywords, alphabet)
     test_pmm.print_transition_table()
     test_pmm.failure_table = [0, 0, 0, 1, 2, 0, 3, 0, 3]
     test_output = {2: ["he"], 5: ["she", "he"], 7: ["his"], 9: ["hers"]}
-    test_pmm.output = test_output
+    # test_pmm.output = test_output
     matches = test_pmm.find_match("ushers")
     print(matches)
 
