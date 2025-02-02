@@ -3,12 +3,14 @@ from PMM import PMM
 
 
 def main():
-    # test_srs_path = "test.srs"
-    # test_srs = SRS()
-    # test_srs.load_terms_from_file(test_srs_path)
+    test_srs_path = "test.srs"
+    test_srs = SRS(test_srs_path)
+    test_srs.print_terms()
 
-    # test_srs.print_terms()
-    basic_pmm_test()
+    test_srs.PMM.print_transition_table()
+    test_srs.PMM.print_failure_function()
+    test_srs.PMM.print_output_function()
+    # basic_pmm_test()
 
 
 def basic_pmm_test():
