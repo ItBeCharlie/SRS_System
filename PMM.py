@@ -44,9 +44,10 @@ class PMM:
             j = 0
             m = len(keyword)
             # While the next state is valid, continue to traverse Trie until a new branch must be created
-            while self.goto(state, keyword[j]) != "fail":
+            while j < m and self.goto(state, keyword[j]) != "fail":
                 state = self.goto(state, keyword[j])
                 j += 1
+
             # Once the beginning of the new branch is met, continually add nodes to add rest of string to Trie
             for p in range(j, m):
                 newstate += 1

@@ -1,15 +1,17 @@
 from SRS import SRS
 from PMM import PMM
+import sys
 
 
 def main():
-    test_srs_path = "test.srs"
-    test_srs = SRS(test_srs_path)
-    test_srs.print_terms()
+    srs_path = sys.argv[1]
+    srs = SRS(srs_path)
 
-    test_srs.PMM.print_transition_table()
-    test_srs.PMM.print_failure_function()
-    test_srs.PMM.print_output_function()
+    srs.print_terms()
+
+    srs.PMM.print_transition_table()
+    srs.PMM.print_failure_function()
+    srs.PMM.print_output_function()
     # basic_pmm_test()
 
 
