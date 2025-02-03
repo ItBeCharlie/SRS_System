@@ -23,15 +23,19 @@ class PMM:
         matches = []
         for i in range(0, n):
             print(f"\t{state}")
-            while self.goto(state, test_string[i]) == "fail":
-                state = self.failure(state)
-                print(f"\t{state}")
-            state = self.goto(state, test_string[i])
-            print(test_string[i])
+            state = self.perform_operation_cycle(state, test_string[i])
             if state in self.output:
                 matches.append((i, self.output[state]))
         print(f"\t{state}")
         return matches
+    
+    def perform_operation_cycle(self, state, symbol):
+        while self.goto(state, symbol) == "fail":
+            state = self.failure(state)
+            print(f"\t{state}")
+        state = self.goto(state, symbol)
+        print(symbol)
+        return state
 
     def construct_goto(self):
         newstate = 0
