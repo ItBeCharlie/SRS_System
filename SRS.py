@@ -1,6 +1,8 @@
 import re
 from PMM import PMM
 
+import time
+
 
 class SRS:
     def __init__(self, file_path):
@@ -55,6 +57,53 @@ class SRS:
         """
         lhs_list = list(self.terms.keys())
         self.PMM = PMM(lhs_list, self.alphabet)
+        
+    def find_normal_form(self, input_string):
+        """
+        Given a string, find the normal form of it using the method described in section 3 of Dran paper
+        """
+        # Keeps track of current character being edited in string
+        index = 0
+        # Form will be reduced until normal form is found
+        form = input_string
+        # Current state of Trie
+        state = 0
+        # History of previous states
+        state_stack = [state]
+        while index < len(form):
+            print(f"\t{state}")
+            state = self.PMM.perform_operation_cycle(state, form[index])
+            print(form[index])
+            state_stack.append(state)
+            # If state is one of the output states, a reduction can be performed
+            if state in self.PMM.output:
+                print(f"\t{state}")
+                # Grab one of the rules from PMM, the exact rule does not matter
+                print(f"index: {index}")
+                lhs_rule = self.PMM.output[state][0]
+                print(lhs_rule)
+                # Perform the reduction on our form
+                w_1 = form[0:index-len(lhs_rule)+1] 
+                R_i = self.terms[lhs_rule][0] 
+                w_2 = form[index+1:]
+                print(f"{w_1}, {R_i}, {w_2}")
+                print(form)
+                form = w_1 + R_i + w_2
+                print(form)
+                # Bring index back to beginning of string replaced
+                index -= len(lhs_rule)
+                print(index)
+                # Restore state back to one before reduction
+                print(state_stack)
+                state_stack = state_stack[0:index+2]
+                state = state_stack[-1]
+                print(state_stack)
+                # exit()
+            else:
+                index += 1
+            time.sleep(0.5)
+        return form
+                
 
     def print_terms(self):
         """

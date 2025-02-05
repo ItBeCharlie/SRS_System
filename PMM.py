@@ -32,9 +32,7 @@ class PMM:
     def perform_operation_cycle(self, state, symbol):
         while self.goto(state, symbol) == "fail":
             state = self.failure(state)
-            print(f"\t{state}")
         state = self.goto(state, symbol)
-        print(symbol)
         return state
 
     def construct_goto(self):

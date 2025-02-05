@@ -5,17 +5,19 @@ import sys
 
 
 def main():
-    # srs_path = sys.argv[1]
-    # srs = SRS(srs_path)
+    srs_path = sys.argv[1]
+    srs = SRS(srs_path)
 
-    # srs.print_terms()
+    srs.print_terms()
 
-    # srs.PMM.print_transition_table()
-    # srs.PMM.print_failure_function()
-    # srs.PMM.print_output_function()
+    srs.PMM.print_transition_table()
+    srs.PMM.print_failure_function()
+    srs.PMM.print_output_function()
 
     # KMPSearch("abba", "babbababbbabbabb")
-    basic_pmm_test()
+    # basic_pmm_test()
+    
+    print(srs.find_normal_form("abba"))
 
 
 def basic_pmm_test():
