@@ -16,8 +16,8 @@ def main():
 
     # KMPSearch("abba", "babbababbbabbabb")
     # basic_pmm_test()
-    
-    print(srs.find_normal_form("abba"))
+
+    print(srs.find_normal_form("bbaababbabbbaabaababb", True))
 
 
 def basic_pmm_test():
