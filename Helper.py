@@ -4,6 +4,9 @@ def KMPSearch(pat, txt):
     M = len(pat)
     N = len(txt)
 
+    # Pattern indexes
+    output = []
+
     # create lps[] that will hold the longest prefix suffix
     # values for pattern
     lps = [0] * M
@@ -19,7 +22,8 @@ def KMPSearch(pat, txt):
             j += 1
 
         if j == M:
-            print("Found pattern at index", str(i - j))
+            output.append(i - j)
+            # print("Found pattern at index", str(i - j))
             j = lps[j - 1]
 
         # mismatch after j matches
@@ -30,6 +34,7 @@ def KMPSearch(pat, txt):
                 j = lps[j - 1]
             else:
                 i += 1
+    return output
 
 
 # This code is contributed by Bhavya Jain
@@ -57,6 +62,7 @@ def computeLPSArray(pat, M, lps):
                 i += 1
 
 
-txt = "ABABDABACDABABCABAB"
-pat = "ABABCABAB"
-KMPSearch(pat, txt)
+def computeOverlap(input_string):
+    lps = [0] * len(input_string)
+    computeLPSArray(input_string, len(input_string), lps)
+    return lps

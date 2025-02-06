@@ -1,6 +1,6 @@
 from SRS import SRS
 from PMM import PMM
-from Helper import KMPSearch
+from Helper import KMPSearch, computeOverlap
 import sys
 
 
@@ -10,14 +10,23 @@ def main():
 
     srs.print_terms()
 
-    srs.PMM.print_transition_table()
-    srs.PMM.print_failure_function()
-    srs.PMM.print_output_function()
+    # srs.PMM.print_transition_table()
+    # srs.PMM.print_failure_function()
+    # srs.PMM.print_output_function()
 
-    # KMPSearch("abba", "babbababbbabbabb")
+    srs.is_church_rosser()
+
+    # pat = "aa"
+    # txt = "bbaababbaabb"
+
+    # matches = KMPSearch(pat, txt)
+    # print(matches)
+    # for match in matches:
+    #     print(txt[0:match], pat, txt[match + len(pat) :])
+    # print(computeOverlap("ababcababa"))
     # basic_pmm_test()
 
-    print(srs.find_normal_form("bbaababbabbbaabaababb", True))
+    # print(srs.find_normal_form("bbaababbabbbaabaababb", True))
 
 
 def basic_pmm_test():

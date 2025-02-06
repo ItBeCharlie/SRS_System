@@ -1,5 +1,6 @@
 import re
 from PMM import PMM
+from Helper import KMPSearch
 
 import time
 
@@ -105,6 +106,66 @@ class SRS:
                 index += 1
         return form
 
+    def get_sorted_lhs(self):
+        """
+        Will return a list of the rules sorted in descending length of lhs.
+        If a lhs has multiple rules, there will be an entry for each lhs
+        """
+        term_pairs = []
+        for lhs in self.terms:
+            for rhs in self.terms[lhs]:
+                term_pairs.append((lhs, rhs))
+        sorted_pairs = sorted(term_pairs, key=lambda x: len(x[0]), reverse=True)
+        return sorted_pairs
+
+    def check_substring_condition(self, debug=False):
+        """
+        Checks that a given system S meets the following condition:
+
+        Given i != j, L_i -> R_i and L_j -> R_j, and L_j is a substring of L_i
+        such that is can be decomposed as L_i = xL_jy, check whether the normal
+        form of R_i and xR_jy are the same. If they are not, then the system cannot
+        be Church-Rosser
+        """
+        invalid_pairs = []
+        invalid_normals = []
+        pairs = self.get_sorted_lhs()
+        # Get two pairs of distinct rules where |L_i| >= |L_j|
+        for i in range(len(pairs)):
+            l_i, r_i = pairs[i]
+            for j in range(i + 1, len(pairs)):
+                l_j, r_j = pairs[j]
+                # Find all substrings of L_j in L_i
+                subtring_indexes = KMPSearch(l_j, l_i)
+                # For all substrings, check if the normal forms of
+                # R_i and xR_jy are the same
+                for indexes in subtring_indexes:
+                    x = l_i[0:indexes]
+                    y = l_i[indexes + len(l_j) :]
+                    if debug:
+                        print(f"i: {pairs[i]}")
+                        print(f"j: {pairs[j]}")
+                        print("x L_j y")
+                        print(x, l_j, y)
+                    normal_i = self.find_normal_form(r_i)
+                    normal_j = self.find_normal_form(x + r_j + y)
+                    if debug:
+                        print(f"Normals: {normal_i}, {normal_j}\n")
+                    # Log the invalid form, to optimize, could simply return False here
+                    if normal_i != normal_j:
+                        invalid_pairs.append((pairs[i], pairs[j]))
+                        invalid_normals.append((normal_i, normal_j))
+        if debug:
+            for i in range(len(invalid_pairs)):
+                print(invalid_pairs[i], invalid_normals[i])
+        return len(invalid_pairs) == 0
+
+    def is_church_rosser(self):
+        """
+        Returns true if the given SRS has the Church-Rosser property based on Dran paper
+        """
+        self.check_substring_condition(True)
+
     def print_terms(self):
         """
         Print the terms in self.terms in an easy to read format
@@ -115,7 +176,7 @@ class SRS:
             print(f"{key:{self.longest_lhs_length}} -> {rhses[0]}")
             for index in range(1, len(rhses)):
                 print(f"{' ' * (self.longest_lhs_length)} -> {rhses[index]}")
-            print()
+            print("\n")
 
     def terms_to_tex(self):
         pass
