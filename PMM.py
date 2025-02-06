@@ -28,7 +28,7 @@ class PMM:
                 matches.append((i, self.output[state]))
         print(f"\t{state}")
         return matches
-    
+
     def perform_operation_cycle(self, state, symbol):
         while self.goto(state, symbol) == "fail":
             state = self.failure(state)
@@ -78,6 +78,7 @@ class PMM:
     def construct_failure(self):
         self.failure_table = [None] * len(self.states)
         queue = []
+
         # For each symbol that points to a state other than 0, add to queue and set failure function to 0 for that state
         for symbol in self.states[0]:
             if self.goto(0, symbol) != 0:
@@ -102,8 +103,9 @@ class PMM:
                     # Update output table
                     if self.failure(s) in self.output:
                         for output_keyword in self.output[self.failure(s)]:
-                            if output_keyword not in self.output[s]:
-                                self.output[s].append(output_keyword)
+                            if s in self.output:
+                                if output_keyword not in self.output[s]:
+                                    self.output[s].append(output_keyword)
 
     def print_transition_table(self):
         print("----- GOTO FUNCTION -----")
