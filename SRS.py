@@ -1,6 +1,6 @@
 import re
 from PMM import PMM
-from Helper import KMPSearch
+from Helper import KMPSearch, computeOverlap
 
 import time
 
@@ -127,6 +127,9 @@ class SRS:
         form of R_i and xR_jy are the same. If they are not, then the system cannot
         be Church-Rosser
         """
+        if debug:
+            print("\n Substring Check \n")
+
         invalid_pairs = []
         invalid_normals = []
         pairs = self.get_sorted_lhs()
@@ -160,21 +163,73 @@ class SRS:
                 print(invalid_pairs[i], invalid_normals[i])
         return len(invalid_pairs) == 0
 
-    def check_overlaps_condition(self):
+    def check_overlaps_condition(self, debug=False):
         """
         Checks that a given system S follows the following condition:
 
         For all i and j where L_i and L_j properly overlap, consider all
         possible overlapped strings. For every overlapped string L_iv = uL_j,
-        check whether the normal form of R_iv and uR_j are the same.
+        check whether the normal forms of R_iv and uR_j are the same.
         """
+        if debug:
+            print("\n Overlap Check \n")
+
+        invalid_pairs = []
+        invalid_critical_pairs = []
+        invalid_normals = []
+        pairs = self.get_sorted_lhs()
+        # Get two not necessarily distinct rules
+        for i in range(len(pairs)):
+            l_i, r_i = pairs[i]
+            for j in range(i, len(pairs)):
+                l_j, r_j = pairs[j]
+                if debug:
+                    print(f"i: {pairs[i]}")
+                    print(f"j: {pairs[j]}")
+                # Create string to generate failure function
+                failure_function = computeOverlap(l_i + "#" + l_j)
+                failure_function.insert(0, 0)
+                if debug:
+                    print(f"Failure: {failure_function}")
+                overlap_length = -1
+                # Iterate over failure function, starting at end until it equals 0
+                while failure_function[overlap_length] != 0:
+                    overlap_length = failure_function[overlap_length]
+                    # Get common overlap, referred as y in paper
+                    y = l_i[:overlap_length]
+                    # Break l_i into form l_i = yu
+                    u = l_i[overlap_length:]
+                    # Break l_j into form l_j = vy
+                    v = l_j[:-overlap_length]
+
+                    if debug:
+                        print("v y u")
+                        print(v, y, u)
+
+                    critical_pair = (r_j + u, v + r_i)
+                    if debug:
+                        print(f"Critical Pair: {critical_pair}")
+
+                    # Obtain normal form of critical pair elements, check they are equal
+                    normal1 = self.find_normal_form(critical_pair[0])
+                    normal2 = self.find_normal_form(critical_pair[1])
+                    if debug:
+                        print(f"Normals: {normal1}, {normal2}\n")
+
+                    # Check that normal forms equal
+                    if normal1 != normal2:
+                        invalid_pairs.append((pairs[i], pairs[j]))
+                        invalid_critical_pairs.append(critical_pair)
+                        invalid_normals.append((normal1, normal2))
+        return len(invalid_pairs) == 0
 
     def is_church_rosser(self):
         """
         Returns true if the given SRS has the Church-Rosser property based on Dran paper
         """
         substring_condition_passed = self.check_substring_condition(True)
-        return substring_condition_passed
+        overlap_condition_passed = self.check_overlaps_condition(True)
+        return substring_condition_passed and overlap_condition_passed
 
     def print_terms(self):
         """
