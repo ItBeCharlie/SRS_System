@@ -243,5 +243,12 @@ class SRS:
                 print(f"{' ' * (self.longest_lhs_length)} -> {rhses[index]}")
             print("\n")
 
+    def export(self, file_name):
+        f = open(file_name, "w")
+        pairs = self.get_sorted_lhs()
+        for pair in pairs:
+            f.write(f"{pair[0]} -> {pair[1]}\n")
+        f.close()
+
     def terms_to_tex(self):
         pass

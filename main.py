@@ -16,6 +16,8 @@ def main():
 
     print(srs.is_church_rosser())
 
+    srs.export("exporttest.srs")
+
     # pat = "aa"
     # txt = "bbaababbaabb"
 
