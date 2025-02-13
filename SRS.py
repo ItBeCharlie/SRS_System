@@ -173,7 +173,8 @@ class SRS:
         """
         Returns true if the given SRS has the Church-Rosser property based on Dran paper
         """
-        self.check_substring_condition(True)
+        substring_condition_passed = self.check_substring_condition(True)
+        return substring_condition_passed
 
     def print_terms(self):
         """
