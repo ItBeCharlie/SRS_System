@@ -5,16 +5,16 @@ import sys
 
 
 def main():
-    srs_path = sys.argv[1]
-    srs = SRS(srs_path)
+    # srs_path = sys.argv[1]
+    # srs = SRS(srs_path)
 
-    srs.print_terms()
+    # srs.print_terms()
 
     # srs.PMM.print_transition_table()
     # srs.PMM.print_failure_function()
     # srs.PMM.print_output_function()
 
-    srs.is_church_rosser()
+    # srs.is_church_rosser()
 
     # pat = "aa"
     # txt = "bbaababbaabb"
@@ -23,7 +23,7 @@ def main():
     # print(matches)
     # for match in matches:
     #     print(txt[0:match], pat, txt[match + len(pat) :])
-    # print(computeOverlap("ababcababa"))
+    print(computeOverlap("ababcababa"))
     # basic_pmm_test()
 
     # print(srs.find_normal_form("bbaababbabbbaabaababb", True))

@@ -160,6 +160,15 @@ class SRS:
                 print(invalid_pairs[i], invalid_normals[i])
         return len(invalid_pairs) == 0
 
+    def check_overlaps_condition(self):
+        """
+        Checks that a given system S follows the following condition:
+
+        For all i and j where L_i and L_j properly overlap, consider all
+        possible overlapped strings. For every overlapped string L_iv = uL_j,
+        check whether the normal form of R_iv and uR_j are the same.
+        """
+
     def is_church_rosser(self):
         """
         Returns true if the given SRS has the Church-Rosser property based on Dran paper
