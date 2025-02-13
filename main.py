@@ -14,7 +14,7 @@ def main():
     # srs.PMM.print_failure_function()
     # srs.PMM.print_output_function()
 
-    srs.is_church_rosser()
+    print(srs.is_church_rosser())
 
     # pat = "aa"
     # txt = "bbaababbaabb"
