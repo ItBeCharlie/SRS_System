@@ -6,14 +6,25 @@ import time
 
 
 class SRS:
-    def __init__(self, file_path):
+    def __init__(self, file_path=None, alphabet=""):
         self.terms = {}
         self.longest_lhs_length = 0
         self.PMM = None
-        self.alphabet = ""
-        self.load_terms_from_file(file_path)
-        self.determine_alphabet()
+        self.alphabet = alphabet
+        if file_path != None:
+            self.load_terms_from_file(file_path)
+            self.complete_initialization
+
+    def complete_initialization(self):
+        if self.alphabet == "":
+            self.determine_alphabet()
         self.generate_pmm()
+
+    def add_term(self, lhs, rhs):
+        # Initialize LHS
+        self.terms.setdefault(lhs, [])
+        # Add RHS to LHS
+        self.terms[lhs].append(rhs)
 
     def load_terms_from_file(self, file_path):
         """
@@ -32,10 +43,8 @@ class SRS:
                     rhs = match.group(2)
                     # Update the longest lhs length if found for printing purposes
                     self.longest_lhs_length = max(len(lhs), self.longest_lhs_length)
-                    # Initialize LHS
-                    self.terms.setdefault(lhs, [])
-                    # Add RHS to LHS
-                    self.terms[lhs].append(rhs)
+                    # Add term
+                    self.add_term(lhs, rhs)
             # print(self.terms)
 
     def determine_alphabet(self):
@@ -76,6 +85,7 @@ class SRS:
             print(f"\t{state}")
         while index < len(form):
             if debug:
+                print(f"Index: {index}")
                 print(form[index])
             state = self.PMM.perform_operation_cycle(state, form[index])
             state_stack.append(state)
@@ -150,8 +160,8 @@ class SRS:
                         print(f"j: {pairs[j]}")
                         print("x L_j y")
                         print(x, l_j, y)
-                    normal_i = self.find_normal_form(r_i)
-                    normal_j = self.find_normal_form(x + r_j + y)
+                    normal_i = self.find_normal_form(r_i, debug)
+                    normal_j = self.find_normal_form(x + r_j + y, debug)
                     if debug:
                         print(f"Normals: {normal_i}, {normal_j}\n")
                     # Log the invalid form, to optimize, could simply return False here
@@ -223,12 +233,12 @@ class SRS:
                         invalid_normals.append((normal1, normal2))
         return len(invalid_pairs) == 0
 
-    def is_church_rosser(self):
+    def is_church_rosser(self, debug=False):
         """
         Returns true if the given SRS has the Church-Rosser property based on Dran paper
         """
-        substring_condition_passed = self.check_substring_condition(True)
-        overlap_condition_passed = self.check_overlaps_condition(True)
+        substring_condition_passed = self.check_substring_condition(debug)
+        overlap_condition_passed = self.check_overlaps_condition(debug)
         return substring_condition_passed and overlap_condition_passed
 
     def print_terms(self):
